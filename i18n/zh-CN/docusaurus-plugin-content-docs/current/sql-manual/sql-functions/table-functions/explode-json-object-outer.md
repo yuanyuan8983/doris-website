@@ -32,8 +32,8 @@ under the License.
 
 ## 语法
 ```sql
-explode_json_object(<expr>)
-explode_json_object_outer(<expr>)
+explode_json_object(<json>)
+explode_json_object_outer(<json>)
 ```
 
 ## 参数
@@ -62,13 +62,17 @@ CREATE TABLE example (
 DISTRIBUTED BY HASH(`id`) BUCKETS AUTO
 PROPERTIES (
 "replication_allocation" = "tag.location.default: 1");
-
+```
+```sql
 INSERT INTO example VALUES
 (1, '{"key1": "value1", "key2": "value2"}'),
 (2, '{}'),
 (3, NULL);
-
-mysql> select * from example;
+```
+```sql
+select * from example;
+```
+```text
 +------+-----------------------------------+
 | id   | value_json                        |
 +------+-----------------------------------+
@@ -76,20 +80,26 @@ mysql> select * from example;
 |    1 | {"key1":"value1","key2":"value2"} |
 |    3 | NULL                              |
 +------+-----------------------------------+
-
-mysql> SELECT id, k, v
-    -> FROM example
-    -> LATERAL VIEW explode_json_object(value_json) exploded_table AS k , v;
+```
+```sql
+SELECT id, k, v
+FROM example
+LATERAL VIEW explode_json_object(value_json) exploded_table AS k , v;
+```
+```text
 +------+------+----------+
 | id   | k    | v        |
 +------+------+----------+
 |    1 | key1 | "value1" |
 |    1 | key2 | "value2" |
 +------+------+----------+
-
-mysql> SELECT id, k, v
-    -> FROM example
-    -> LATERAL VIEW explode_json_object_outer(value_json) exploded_table AS k, v;
+```
+```sql
+SELECT id, k, v
+FROM example
+LATERAL VIEW explode_json_object_outer(value_json) exploded_table AS k, v;
+```
+```text
 +------+------+----------+
 | id   | k    | v        |
 +------+------+----------+
@@ -98,8 +108,4 @@ mysql> SELECT id, k, v
 |    1 | key2 | "value2" |
 |    2 | NULL | NULL     |
 +------+------+----------+
-
 ```
-
-### Keywords
-EXPLODE_JSON_OBJECT,EXPLODE_JSON_OBJECT_OUTER,JSON

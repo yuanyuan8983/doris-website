@@ -45,17 +45,17 @@ under the License.
 
 ## 举例
 
-```
-mysql> select e1 from (select 1 k1) as t lateral view explode_numbers(0) tmp1 as e1;
+```sql
+select e1 from (select 1 k1) as t lateral view explode_numbers(0) tmp1 as e1;
 Empty set
-
-mysql> select e1 from (select 1 k1) as t lateral view explode_numbers_outer(0) tmp1 as e1;
+```
+```sql
+select e1 from (select 1 k1) as t lateral view explode_numbers_outer(0) tmp1 as e1;
+```
+```text
 +------+
 | e1   |
 +------+
 | NULL |
 +------+
 ```
-### keywords
-
-explode,numbers,explode_numbers

@@ -24,29 +24,31 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode_split
+## Description
 
-### description
-#### syntax
+The `explode_split` table function is used to split a string into multiple substrings based on a specified delimiter and expand each substring into a separate row. Each substring is returned as an individual row, and it is typically used with LATERAL VIEW to break down long strings into individual parts for more granular queries.
 
-`explode_split(str, delimiter)`
+## Syntax
 
-Table functions must be used in conjunction with Lateral View.
+`explode_split(<str>, <delimiter>)`
 
-Split a string into multiple substrings according to the specified delimiter.
+## Parameters
 
-grammar:
+| Parameter | Description |
+| -- | -- |
+| `<str>` | String type |
+| `<delimiter>` | Delimiter |
 
+## Return Value
+
+Returns a sequence of the split substrings. If the string is empty or NULL, no rows are returned.
+
+## Examples
+
+```sql
+select * from example1 order by k1;
 ```
-explode_split(str, delimiter)
-```
-
-### example
-
-Original table data:
-
-```
-mysql> select * from example1 order by k1;
+```text
 +------+---------+
 | k1   | k2      |
 +------+---------+
@@ -59,34 +61,44 @@ mysql> select * from example1 order by k1;
 +------+---------+
 ```
 
-Lateral View:
-
+```sql
+select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 1 order by k1, e1;
 ```
-mysql> select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 1 order by k1, e1;
+```text
 +------+------+
 | k1   | e1   |
 +------+------+
 |    1 |      |
 +------+------+
-
-mysql> select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 2 order by k1, e1;
+```
+```sql
+select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 2 order by k1, e1;
 Empty set
-
-mysql> select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 3 order by k1, e1;
+```
+```sql
+select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 3 order by k1, e1;
+```
+```text
 +------+------+
 | k1   | e1   |
 +------+------+
 |    3 |      |
 +------+------+
-
-mysql> select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 4 order by k1, e1;
+```
+```sql
+select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 4 order by k1, e1;
+```
+```text
 +------+------+
 | k1   | e1   |
 +------+------+
 |    4 | 1    |
 +------+------+
-
-mysql> select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 5 order by k1, e1;
+```
+```sql
+select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 5 order by k1, e1;
+```
+```text
 +------+------+
 | k1   | e1   |
 +------+------+
@@ -94,8 +106,11 @@ mysql> select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e
 |    5 | 3    |
 |    5 | 1    |
 +------+------+
-
-mysql> select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 6 order by k1, e1;
+```
+```sql
+select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e1 where k1 = 6 order by k1, e1;
+```
+```text
 +------+------+
 | k1   | e1   |
 +------+------+
@@ -104,7 +119,3 @@ mysql> select k1, e1 from example1 lateral view explode_split(k2, ',') tmp1 as e
 |    6 | a    |
 +------+------+
 ```
-
-### keywords
-
-explode,split,explode_split

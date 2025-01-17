@@ -26,12 +26,12 @@ under the License.
 
 ## Description
 
-The explode function takes an array as input and maps each element of the array to a separate row. It is typically used in conjunction with LATERAL VIEW to flatten nested data structures into a standard tabular format. The main difference between explode and explode_outer lies in handling empty values.
+The `explode` function takes an array as input and maps each element of the array to a separate row. It is typically used in conjunction with LATERAL VIEW to flatten nested data structures into a standard tabular format. The main difference between explode and `explode_outer` lies in handling empty values.
 
 ## Syntax
 ```sql
-explode(expr)
-explode_outer(expr)
+explode(<arr>)
+explode_outer(<arr>)
 ```
 
 ## Required Parameters
@@ -50,9 +50,12 @@ When the data is empty or NULL:
 
 `explode_outer` if the array is empty, will generate a single row, but the expanded column value will be NULL. If the array is NULL, it will also retain a row and return NULL.
 
-### example
+## Examples
 ```
-mysql> select e1 from (select 1 k1) as t lateral view explode([1,2,3]) tmp1 as e1;
+select e1 from (select 1 k1) as t lateral view explode([1,2,3]) tmp1 as e1;
+```
+
+```text
 +------+
 | e1   |
 +------+
@@ -60,27 +63,27 @@ mysql> select e1 from (select 1 k1) as t lateral view explode([1,2,3]) tmp1 as e
 |    2 |
 |    3 |
 +------+
-
-mysql> select e1 from (select 1 k1) as t lateral view explode_outer(null) tmp1 as e1;
+```
+```sql
+select e1 from (select 1 k1) as t lateral view explode_outer(null) tmp1 as e1;
+```
+``` text
 +------+
 | e1   |
 +------+
 | NULL |
 +------+
+```
 
-mysql> select e1 from (select 1 k1) as t lateral view explode([]) tmp1 as e1;
+```sql
+select e1 from (select 1 k1) as t lateral view explode([]) tmp1 as e1;
 Empty set (0.010 sec)
+```
 
-mysql> select e1 from (select 1 k1) as t lateral view explode([null,1,null]) tmp1 as e1;
-+------+
-| e1   |
-+------+
-| NULL |
-|    1 |
-| NULL |
-+------+
-
-mysql> select e1 from (select 1 k1) as t lateral view explode_outer([null,1,null]) tmp1 as e1;
+```sql
+select e1 from (select 1 k1) as t lateral view explode([null,1,null]) tmp1 as e1;
+```
+```text
 +------+
 | e1   |
 +------+
@@ -90,5 +93,15 @@ mysql> select e1 from (select 1 k1) as t lateral view explode_outer([null,1,null
 +------+
 ```
 
-### keywords
-EXPLODE,EXPLODE_OUTER,ARRAY
+```sql
+select e1 from (select 1 k1) as t lateral view explode_outer([null,1,null]) tmp1 as e1;
+```
+```text
++------+
+| e1   |
++------+
+| NULL |
+|    1 |
+| NULL |
++------+
+```

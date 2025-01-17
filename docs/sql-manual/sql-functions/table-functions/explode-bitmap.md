@@ -24,24 +24,41 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## explode_bitmap
+## Description
 
-### description
+`explode_bitmap` table function accepts a bitmap type data and maps each bit of the bitmap into a separate row. It is typically used for processing bitmap data, expanding each element of the bitmap into individual records. It should be used with LATERAL VIEW.
 
-Table functions must be used in conjunction with Lateral View.
+## Syntax
 
-Expand a bitmap type.
+`explode_bitmap(<bitmap>)`
 
-#### syntax
+## Parameters
 
-`explode_bitmap(bitmap)`
+| Parameter | Description |
+| -- | -- |
+| `<bitmap>` | bitmap type |
 
-### example
+## Return Value
 
-Original table data:
+Returns a row for each bit in the bitmap, with each row containing a single bit value.
 
+## Examples
+
+```sql
+CREATE TABLE example1 (
+    k1 INT
+)DUPLICATE KEY(k1)
+DISTRIBUTED BY HASH(k1) BUCKETS AUTO
+PROPERTIES (
+"replication_allocation" = "tag.location.default: 1");
 ```
-mysql> select k1 from example1 order by k1;
+```sql
+insert into example1 values(1),(2),(3),(4),(5),(6);
+```
+```sql
+select k1 from example1 order by k1;
+```
+```text
 +------+
 | k1   |
 +------+
@@ -53,23 +70,14 @@ mysql> select k1 from example1 order by k1;
 |    6 |
 +------+
 ```
-
-Lateral View:
-
+```sql
+select k1, e1 from example1 lateral view explode_bitmap(bitmap_empty()) tmp1 as e1 order by k1, e1;
+Empty set
 ```
-mysql> select k1, e1 from example1 lateral view explode_bitmap(bitmap_empty()) tmp1 as e1 order by k1, e1;
-+------+------+
-| k1   | e1   |
-+------+------+
-|    1 | NULL |
-|    2 | NULL |
-|    3 | NULL |
-|    4 | NULL |
-|    5 | NULL |
-|    6 | NULL |
-+------+------+
-
-mysql> select k1, e1 from example1 lateral view explode_bitmap(bitmap_from_string("1")) tmp1 as e1 order by k1, e1;
+```sql
+select k1, e1 from example1 lateral view explode_bitmap(bitmap_from_string("1")) tmp1 as e1 order by k1, e1;
+```
+```text
 +------+------+
 | k1   | e1   |
 +------+------+
@@ -80,8 +88,11 @@ mysql> select k1, e1 from example1 lateral view explode_bitmap(bitmap_from_strin
 |    5 |    1 |
 |    6 |    1 |
 +------+------+
-
-mysql> select k1, e1 from example1 lateral view explode_bitmap(bitmap_from_string("1,2")) tmp1 as e1 order by k1, e1;
+```
+```sql
+select k1, e1 from example1 lateral view explode_bitmap(bitmap_from_string("1,2")) tmp1 as e1 order by k1, e1;
+```
+```text
 +------+------+
 | k1   | e1   |
 +------+------+
@@ -98,8 +109,11 @@ mysql> select k1, e1 from example1 lateral view explode_bitmap(bitmap_from_strin
 |    6 |    1 |
 |    6 |    2 |
 +------+------+
-
-mysql> select k1, e1 from example1 lateral view explode_bitmap(bitmap_from_string("1,1000")) tmp1 as e1 order by k1, e1;
+```
+```sql
+select k1, e1 from example1 lateral view explode_bitmap(bitmap_from_string("1,1000")) tmp1 as e1 order by k1, e1;
+```
+```text
 +------+------+
 | k1   | e1   |
 +------+------+
@@ -116,10 +130,13 @@ mysql> select k1, e1 from example1 lateral view explode_bitmap(bitmap_from_strin
 |    6 |    1 |
 |    6 | 1000 |
 +------+------+
-
-mysql> select k1, e1, e2 from example1
+```
+```sql
+select k1, e1, e2 from example1
 lateral view explode_bitmap(bitmap_from_string("1,1000")) tmp1 as e1
 lateral view explode_split("a,b", ",") tmp2 as e2 order by k1, e1, e2;
+```
+```text
 +------+------+------+
 | k1   | e1   | e2   |
 +------+------+------+
@@ -149,7 +166,3 @@ lateral view explode_split("a,b", ",") tmp2 as e2 order by k1, e1, e2;
 |    6 | 1000 | b    |
 +------+------+------+
 ```
-
-### keywords
-
-explode,bitmap,explode_bitmap

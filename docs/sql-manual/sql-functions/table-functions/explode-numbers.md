@@ -32,7 +32,6 @@ The `explode_numbers` table function takes an integer n and expands all numbers 
 
 `explode_numbers(<n>)`
 
-
 ## Parameters
 
 | Parameter | Description |
@@ -47,8 +46,10 @@ Returns a sequence of [0, n).
 
 ## Examples
 
+```sql
+select e1 from (select 1 k1) as t lateral view explode_numbers(5) tmp1 as e1;
 ```
-mysql> select e1 from (select 1 k1) as t lateral view explode_numbers(5) tmp1 as e1;
+```text
 +------+
 | e1   |
 +------+
@@ -59,6 +60,3 @@ mysql> select e1 from (select 1 k1) as t lateral view explode_numbers(5) tmp1 as
 |    4 |
 +------+
 ```
-### keywords
-
-explode,numbers,explode_numbers
