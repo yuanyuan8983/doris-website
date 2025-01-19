@@ -32,8 +32,8 @@ under the License.
 
 ## 语法
 ```sql
-explode_map(map<k,v>)
-explode_map_outer(map<k,v>)
+EXPLODE_MAP(map<k,v>)
+EXPLODE_MAP_OUTER(map<k,v>)
 ```
 
 ## 参数
@@ -57,9 +57,11 @@ explode_map_outer(map<k,v>)
 ```sql
 SET enable_nereids_planner=true
 ```
+
 ```sql
 SET enable_fallback_to_original_planner=false
 ```
+
 ```sql
 CREATE TABLE IF NOT EXISTS `sdu`(
                    `id` INT NULL,
@@ -82,6 +84,7 @@ Query OK, 5 rows affected (0.23 sec)
 ```sql
 select * from sdu order by id;
 ```
+
 ```text
 +------+----------+-----------------------------------------+
 | id   | name     | score                                   |
@@ -93,9 +96,11 @@ select * from sdu order by id;
 |    4 | amory    | NULL                                    |
 +------+----------+-----------------------------------------+
 ```
+
 ```sql
 select name, k,v from sdu lateral view explode_map(score) tmp as k,v;
 ```
+
 ```text
 +----------+---------+------+
 | name     | k       | v    |
@@ -110,9 +115,11 @@ select name, k,v from sdu lateral view explode_map(score) tmp as k,v;
 | lisi2    | NULL    | NULL |
 +----------+---------+------+
 ```
+
 ```sql
 select name, k,v from sdu lateral view explode_map_outer(score) tmp as k,v;
 ```
+
 ```text
 +----------+---------+------+
 | name     | k       | v    |
@@ -128,9 +135,11 @@ select name, k,v from sdu lateral view explode_map_outer(score) tmp as k,v;
 | amory    | NULL    | NULL |
 +----------+---------+------+
 ```
+
 ```sql
 select name, k,v,k1,v1 from sdu lateral view explode_map_outer(score) tmp as k,v lateral view explode_map(score) tmp2 as k1,v1;
 ```
+
 ```text
 +----------+---------+------+---------+------+
 | name     | k       | v    | k1      | v1   |

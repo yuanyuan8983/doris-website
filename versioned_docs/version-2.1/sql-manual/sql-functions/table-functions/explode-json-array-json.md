@@ -30,7 +30,8 @@ The `explode_json_array_json` table function accepts a JSON array, where each el
 
 ## Syntax
 ```sql
-explode_json_array_json(<json>)
+EXPLODE_JSON_ARRAY_JSON(<json>)
+EXPLODE_JSON_ARRAY_JSON_OUTER(<json>)
 ```
 
 ## Return Value
@@ -54,6 +55,7 @@ DISTRIBUTED BY HASH(id) BUCKETS AUTO
 PROPERTIES (
 "replication_allocation" = "tag.location.default: 1");
 ```
+
 ```sql
 INSERT INTO json_array_example (id, json_array) VALUES
 (1, '[1, 2, 3, 4, 5]'),
@@ -63,12 +65,14 @@ INSERT INTO json_array_example (id, json_array) VALUES
 (5, '[]'),
 (6, 'NULL');
 ```
+
 ```sql
 SELECT id, e1
 FROM json_array_example
 LATERAL VIEW EXPLODE_JSON_ARRAY_JSON(json_array) tmp1 AS e1
 WHERE id = 4;
 ```
+
 ```text
 +------+---------+
 | id   | e1      |

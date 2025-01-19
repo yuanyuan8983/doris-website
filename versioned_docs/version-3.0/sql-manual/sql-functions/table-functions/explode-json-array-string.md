@@ -36,8 +36,8 @@ If the JSON array is empty, the `OUTER` version will return one row, with the va
 
 ## Syntax
 ```sql
-explode_json_array_string(<json>)
-explode_json_array_string_outer(<json>)
+EXPLODE_JSON_ARRAY_STRING(<json>)
+EXPLODE_JSON_ARRAY_STRING_OUTER(<json>)
 ```
 
 ## Return Value
@@ -61,6 +61,7 @@ DISTRIBUTED BY HASH(id) BUCKETS AUTO
 PROPERTIES (
 "replication_allocation" = "tag.location.default: 1");
 ```
+
 ```sql
 INSERT INTO json_array_example (id, json_array) VALUES
 (1, '[1, 2, 3, 4, 5]'),
@@ -70,12 +71,14 @@ INSERT INTO json_array_example (id, json_array) VALUES
 (5, '[]'),
 (6, 'NULL');
 ```
+
 ```sql
 SELECT id, e1
 FROM json_array_example
 LATERAL VIEW EXPLODE_JSON_ARRAY_STRING(json_array) tmp1 AS e1
 WHERE id = 3;
 ```
+
 ```text
 +------+--------+
 | id   | e1     |
@@ -85,6 +88,7 @@ WHERE id = 3;
 |    3 | cherry |
 +------+--------+
 ```
+
 ```sql
 SELECT id, e1
 FROM json_array_example
@@ -92,12 +96,14 @@ LATERAL VIEW EXPLODE_JSON_ARRAY_STRING(json_array) tmp1 AS e1
 WHERE id = 6;
 Empty set (0.02 sec)
 ```
+
 ```sql
 SELECT id, e1
 FROM json_array_example
 LATERAL VIEW EXPLODE_JSON_ARRAY_STRING_OUTER(json_array) tmp1 AS e1
 WHERE id = 6;
 ```
+
 ```text
 +------+------+
 | id   | e1   |

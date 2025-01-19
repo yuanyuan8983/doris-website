@@ -30,7 +30,7 @@ The `explode_variant_array` table function accepts a variant type, where each el
 
 ## Syntax
 ```sql
-explode_variant_array(<variant>)
+EXPLODE_VARIANT_ARRAY(<variant>)
 ```
 
 ## Return Value
@@ -66,6 +66,7 @@ PROPERTIES (
 "group_commit_data_bytes" = "134217728"
 );
 ```
+
 ```sql
 insert into simple_nested_test values(1, '{
   "eventId": 1,
@@ -92,11 +93,13 @@ insert into simple_nested_test values(1, '{
   }
 }');
 ```
+
 ```sql
 select v['eventId'], phone_numbers
     from simple_nested_test lateral view explode_variant_array(v['body']['phoneNumbers']) tmp1 as phone_numbers
     where phone_numbers['type'] = 'GSM' OR phone_numbers['type'] = 'HOME' and phone_numbers['callLimit'] > 2;   
 ```
+
 ```text
 +--------------------------+----------------------------------------------------+
 | element_at(v, 'eventId') | phone_numbers                                      |

@@ -30,8 +30,8 @@ The `explode` function takes an array as input and maps each element of the arra
 
 ## Syntax
 ```sql
-explode(<arr>)
-explode_outer(<arr>)
+EXPLODE(<array>)
+EXPLODE_OUTER(<array>)
 ```
 
 ## Required Parameters
@@ -64,9 +64,11 @@ select e1 from (select 1 k1) as t lateral view explode([1,2,3]) tmp1 as e1;
 |    3 |
 +------+
 ```
+
 ```sql
 select e1 from (select 1 k1) as t lateral view explode_outer(null) tmp1 as e1;
 ```
+
 ``` text
 +------+
 | e1   |
@@ -83,6 +85,7 @@ Empty set (0.010 sec)
 ```sql
 select e1 from (select 1 k1) as t lateral view explode([null,1,null]) tmp1 as e1;
 ```
+
 ```text
 +------+
 | e1   |
@@ -96,6 +99,7 @@ select e1 from (select 1 k1) as t lateral view explode([null,1,null]) tmp1 as e1
 ```sql
 select e1 from (select 1 k1) as t lateral view explode_outer([null,1,null]) tmp1 as e1;
 ```
+
 ```text
 +------+
 | e1   |

@@ -31,7 +31,7 @@ under the License.
 ## 语法
 
 ```sql
-explode_variant_array(<variant>)
+EXPLODE_VARIANT_ARRAY(<variant>)
 ```
 
 ## 参数
@@ -67,6 +67,7 @@ PROPERTIES (
 "group_commit_data_bytes" = "134217728"
 );
 ```
+
 ```sql
 insert into simple_nested_test values(1, '{
   "eventId": 1,
@@ -93,11 +94,13 @@ insert into simple_nested_test values(1, '{
   }
 }');
 ```
+
 ```sql
 select v['eventId'], phone_numbers
     from simple_nested_test lateral view explode_variant_array(v['body']['phoneNumbers']) tmp1 as phone_numbers
     where phone_numbers['type'] = 'GSM' OR phone_numbers['type'] = 'HOME' and phone_numbers['callLimit'] > 2;   
 ```
+
 ```text
 +--------------------------+----------------------------------------------------+
 | element_at(v, 'eventId') | phone_numbers                                      |

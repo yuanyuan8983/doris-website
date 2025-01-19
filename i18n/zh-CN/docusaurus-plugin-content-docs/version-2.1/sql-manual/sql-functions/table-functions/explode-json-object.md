@@ -32,8 +32,8 @@ under the License.
 
 ## 语法
 ```sql
-explode_json_object(<json>)
-explode_json_object_outer(<json>)
+EXPLODE_JSON_OBJECT(<json>)
+EXPLODE_JSON_OBJECT_OUTER(<json>)
 ```
 
 ## 参数
@@ -63,15 +63,18 @@ DISTRIBUTED BY HASH(`id`) BUCKETS AUTO
 PROPERTIES (
 "replication_allocation" = "tag.location.default: 1");
 ```
+
 ```sql
 INSERT INTO example VALUES
 (1, '{"key1": "value1", "key2": "value2"}'),
 (2, '{}'),
 (3, NULL);
 ```
+
 ```sql
 select * from example;
 ```
+
 ```text
 +------+-----------------------------------+
 | id   | value_json                        |
@@ -81,11 +84,13 @@ select * from example;
 |    3 | NULL                              |
 +------+-----------------------------------+
 ```
+
 ```sql
 SELECT id, k, v
 FROM example
 LATERAL VIEW explode_json_object(value_json) exploded_table AS k , v;
 ```
+
 ```text
 +------+------+----------+
 | id   | k    | v        |
@@ -94,11 +99,13 @@ LATERAL VIEW explode_json_object(value_json) exploded_table AS k , v;
 |    1 | key2 | "value2" |
 +------+------+----------+
 ```
+
 ```sql
 SELECT id, k, v
 FROM example
 LATERAL VIEW explode_json_object_outer(value_json) exploded_table AS k, v;
 ```
+
 ```text
 +------+------+----------+
 | id   | k    | v        |

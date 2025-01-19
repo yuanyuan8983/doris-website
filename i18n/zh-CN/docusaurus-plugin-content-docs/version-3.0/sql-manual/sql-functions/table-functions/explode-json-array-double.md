@@ -37,8 +37,8 @@ under the License.
 ## 语法
 
 ```sql
-explode_json_array_double(<json>)
-explode_json_array_double_outer(<json>)
+EXPLODE_JSON_ARRAY_DOUBLE(<json>)
+EXPLODE_JSON_ARRAY_DOUBLE_OUTER(<json>)
 ```
 
 ## 参数
@@ -62,6 +62,7 @@ DISTRIBUTED BY HASH(id) BUCKETS AUTO
 PROPERTIES (
 "replication_allocation" = "tag.location.default: 1");
 ```
+
 ```sql
 INSERT INTO json_array_example (id, json_array) VALUES
 (1, '[1, 2, 3, 4, 5]'),
@@ -71,12 +72,14 @@ INSERT INTO json_array_example (id, json_array) VALUES
 (5, '[]'),
 (6, 'NULL');
 ```
+
 ```sql
 SELECT id, e1
 FROM json_array_example
 LATERAL VIEW EXPLODE_JSON_ARRAY_DOUBLE(json_array) tmp1 AS e1
 WHERE id = 2;
 ```
+
 ```text
 +------+------+
 | id   | e1   |
@@ -87,6 +90,7 @@ WHERE id = 2;
 |    2 |  4.4 |
 +------+------+
 ```
+
 ```sql
 SELECT id, e1
 FROM json_array_example
@@ -94,12 +98,14 @@ LATERAL VIEW EXPLODE_JSON_ARRAY_DOUBLE(json_array) tmp1 AS e1
 WHERE id = 6;
 Empty set (0.01 sec)
 ```
+
 ```sql
 SELECT id, e1
 FROM json_array_example
 LATERAL VIEW EXPLODE_JSON_ARRAY_DOUBLE_OUTER(json_array) tmp1 AS e1
 WHERE id = 6;
 ```
+
 ```text
 +------+------+
 | id   | e1   |

@@ -28,9 +28,14 @@ under the License.
 
 The `explode_numbers` table function takes an integer n and expands all numbers within the range into multiple rows, each containing a single number. It is commonly used to generate a sequence of consecutive numbers and is often paired with LATERAL VIEW.
 
+`explode_numbers_outer`, unlike `explode_numbers`, adds a NULL row when the table function generates zero rows.
+
 ## Syntax
 
-`explode_numbers(<n>)`
+```sql
+EXPLODE_NUMBERS(<n>)
+EXPLODE_NUMBERS_OUTER(<n>)
+```
 
 ## Parameters
 
@@ -49,6 +54,7 @@ Returns a sequence of [0, n).
 ```sql
 select e1 from (select 1 k1) as t lateral view explode_numbers(5) tmp1 as e1;
 ```
+
 ```text
 +------+
 | e1   |
@@ -58,5 +64,22 @@ select e1 from (select 1 k1) as t lateral view explode_numbers(5) tmp1 as e1;
 |    2 |
 |    3 |
 |    4 |
++------+
+```
+
+```sql
+select e1 from (select 1 k1) as t lateral view explode_numbers(0) tmp1 as e1;
+Empty set
+```
+
+```sql
+select e1 from (select 1 k1) as t lateral view explode_numbers_outer(0) tmp1 as e1;
+```
+
+```text
++------+
+| e1   |
++------+
+| NULL |
 +------+
 ```
