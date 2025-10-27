@@ -142,7 +142,7 @@ Dynamic partition parameter configurations in FE can be modified in the FE confi
 
 | Parameter                               | Default Value | Description                                                                                                  |
 | --------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------ |
-| `dynamic_partition_enable`              | false         | Whether to enable Doris's dynamic partition feature. This parameter only affects partition operations of dynamic partition tables and does not affect regular tables. |
+| `dynamic_partition_enable`              | true         | Whether to enable Doris's dynamic partition feature. This parameter only affects partition operations of dynamic partition tables and does not affect regular tables. |
 | `dynamic_partition_check_interval_seconds` | 600           | The execution frequency of the dynamic partition thread, in seconds.                                       |
 | `max_dynamic_partition_num`            | 500           | Limits the maximum number of partitions that can be created when creating a dynamic partition table to avoid creating too many partitions at once. |
 
